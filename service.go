@@ -98,27 +98,28 @@ func ScrapeUsers(URL string) []models.User {
 			*/
 			userDataFragmentCounter++
 
-			if userDataFragmentCounter == 4 {
+			switch userDataFragmentCounter {
+			case 4:
 				newUser.Address = userDataFragment
-			} else if userDataFragmentCounter == 5 {
+			case 5:
 				newUser.PhoneNumber = userDataFragment
-			} else if userDataFragmentCounter == 6 {
+			case 6:
 				newUser.Email = userDataFragment
-			} else if userDataFragmentCounter == 7 {
+			case 7:
 				newUser.IP = userDataFragment
-			} else if userDataFragmentCounter == 8 {
+			case 8:
 				newUser.Username = userDataFragment
-			} else if userDataFragmentCounter == 9 {
+			case 9:
 				newUser.Password = userDataFragment
-			} else if userDataFragmentCounter == 10 {
+			case 10:
 				newUser.CreditCardNumber = userDataFragment
-			} else if userDataFragmentCounter == 11 {
+			case 11:
 				newUser.ExpirationDate = userDataFragment
-			} else if userDataFragmentCounter == 12 {
+			case 12:
 				newUser.IBAN = userDataFragment
-			} else if userDataFragmentCounter == 13 {
+			case 13:
 				newUser.SwiftBicNumber = userDataFragment
-			} else if userDataFragmentCounter == 14 {
+			case 14:
 				newUser.Company = userDataFragment
 			}
 		})

@@ -28,26 +28,33 @@ func (app *App) LoadCountryNames() {
 }
 
 func (app *App) ScrapeUsersAndWriteToJSON() {
+	var numberOfCountries = len(app.countryList)
+	var formattedCountryName string
+	var numberOfMaleUsersToBeGenerated int
+	var numberOfFemaleUsersToBeGenerated int
 	var urlForMaleUsers string
 	var urlForFemaleUsers string
-	var maleUsers int
-	var femaleUsers int
-	var iterationLimit = len(app.countryList)
 
-	for i := 0; i < iterationLimit; i++ {
-		for maleUsers = app.numberOfMaleUsers; maleUsers > 10; maleUsers -= 10 {
-			urlForMaleUsers = baseURL + strings.ToLower(app.countryList[i].Name) + "?s=" + strconv.Itoa(900+rand.Intn(100)) + "&search_terms=&gender=male&search_terms=&n=10"
+	for i := 0; i < numberOfCountries; i++ {
+		formattedCountryName = strings.ToLower(strings.ReplaceAll(app.countryList[i].Name, " ", "-"))
+
+		for numberOfMaleUsersToBeGenerated = app.numberOfMaleUsers; numberOfMaleUsersToBeGenerated > 10; numberOfMaleUsersToBeGenerated -= 10 {
+			urlForMaleUsers = baseURL + formattedCountryName + "?s=" + strconv.Itoa(900+rand.Intn(100)) + "&search_terms=&gender=male&search_terms=&n=10"
 			app.userList = append(app.userList, ScrapeUsers(urlForMaleUsers)...)
 		}
-		urlForMaleUsers = baseURL + strings.ToLower(app.countryList[i].Name) + "?s=" + strconv.Itoa(900+rand.Intn(100)) + "&search_terms=&gender=male&search_terms=&n=" + strconv.Itoa(maleUsers)
-		app.userList = append(app.userList, ScrapeUsers(urlForMaleUsers)...)
+		if numberOfMaleUsersToBeGenerated > 0 {
+			urlForMaleUsers = baseURL + formattedCountryName + "?s=" + strconv.Itoa(900+rand.Intn(100)) + "&search_terms=&gender=male&search_terms=&n=" + strconv.Itoa(numberOfMaleUsersToBeGenerated)
+			app.userList = append(app.userList, ScrapeUsers(urlForMaleUsers)...)
+		}
 
-		for femaleUsers = app.numberOfFemaleUsers; femaleUsers > 10; femaleUsers -= 10 {
-			urlForFemaleUsers = baseURL + strings.ToLower(app.countryList[i].Name) + "?s=" + strconv.Itoa(900+rand.Intn(100)) + "&search_terms=&gender=female&search_terms=&n=10"
+		for numberOfFemaleUsersToBeGenerated = app.numberOfFemaleUsers; numberOfFemaleUsersToBeGenerated > 10; numberOfFemaleUsersToBeGenerated -= 10 {
+			urlForFemaleUsers = baseURL + formattedCountryName + "?s=" + strconv.Itoa(900+rand.Intn(100)) + "&search_terms=&gender=female&search_terms=&n=10"
 			app.userList = append(app.userList, ScrapeUsers(urlForFemaleUsers)...)
 		}
-		urlForFemaleUsers = baseURL + strings.ToLower(app.countryList[i].Name) + "?s=" + strconv.Itoa(900+rand.Intn(100)) + "&search_terms=&gender=female&search_terms=&n=" + strconv.Itoa(femaleUsers)
-		app.userList = append(app.userList, ScrapeUsers(urlForFemaleUsers)...)
+		if numberOfFemaleUsersToBeGenerated > 0 {
+			urlForFemaleUsers = baseURL + formattedCountryName + "?s=" + strconv.Itoa(900+rand.Intn(100)) + "&search_terms=&gender=female&search_terms=&n=" + strconv.Itoa(numberOfFemaleUsersToBeGenerated)
+			app.userList = append(app.userList, ScrapeUsers(urlForFemaleUsers)...)
+		}
 	}
 
 	WriteToJSON(app.userList)
